@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Reveal } from "@/components/landing/Reveal";
-import { useParallax } from "@/hooks/use-reveal";
 import heroHands from "@/assets/hero-hands.jpg";
 import clayForm from "@/assets/clay-form.jpg";
 import listening from "@/assets/listening.jpg";
@@ -134,8 +133,6 @@ function NavBar() {
 }
 
 function Hero() {
-  const { ref, offset } = useParallax(40);
-
   return (
     <section className="mx-auto grid max-w-7xl items-center gap-14 px-6 pb-20 pt-16 md:px-10 lg:grid-cols-2 lg:gap-20 lg:pt-24">
       <div className="order-2 flex flex-col gap-8 lg:order-1">
@@ -189,17 +186,13 @@ function Hero() {
       </div>
 
       <div className="order-1 lg:order-2">
-        <div
-          ref={ref}
-          className="overflow-hidden rounded-[60px] border-8 border-clay shadow-[var(--shadow-soft)] lg:rounded-b-[60px] lg:rounded-t-[280px]"
-        >
+        <div className="overflow-hidden rounded-[60px] border-8 border-clay shadow-[var(--shadow-soft)] lg:rounded-b-[60px] lg:rounded-t-[280px]">
           <img
             src={heroHands}
             alt="Hands cradling a warm clay cup in soft morning light"
             width={912}
             height={1200}
-            className="h-full min-h-[420px] w-full object-cover lg:min-h-[600px] scale-110 will-change-transform"
-            style={{ transform: `translateY(${offset}px)`, transition: "transform 0.1s ease-out" }}
+            className="h-full min-h-[420px] w-full object-cover lg:min-h-[600px]"
           />
         </div>
       </div>
@@ -233,24 +226,18 @@ function Journey() {
 }
 
 function HowItHelps() {
-  const { ref, offset } = useParallax(35);
-
   return (
     <section id="help" className="mx-auto max-w-7xl px-6 py-16 md:px-10">
       <div className="grid items-center gap-14 lg:grid-cols-2">
         <Reveal>
-          <div
-            ref={ref}
-            className="overflow-hidden rounded-[48px] shadow-[0_30px_75px_-15px_rgba(25,45,35,0.45),0_15px_35px_-10px_rgba(0,0,0,0.25)] border border-foreground/10"
-          >
+          <div className="overflow-hidden rounded-[48px] shadow-[0_30px_75px_-15px_rgba(25,45,35,0.45),0_15px_35px_-10px_rgba(0,0,0,0.25)] border border-foreground/10">
             <img
               src={listening}
               alt="Two people sitting together in warm afternoon light, one listening closely"
               width={1008}
               height={752}
               loading="lazy"
-              className="h-full w-full object-cover scale-110 will-change-transform"
-              style={{ transform: `translateY(${offset}px)`, transition: "transform 0.1s ease-out" }}
+              className="h-full w-full object-cover"
             />
           </div>
         </Reveal>
@@ -293,8 +280,6 @@ function HowItHelps() {
 }
 
 function Privacy() {
-  const { ref, offset } = useParallax(30);
-
   return (
     <section className="mx-auto max-w-7xl px-6 py-16 md:px-10">
       <Reveal>
@@ -326,18 +311,14 @@ function Privacy() {
             </div>
           </div>
           <div className="w-full md:w-1/3">
-            <div
-              ref={ref}
-              className="overflow-hidden aspect-square w-full rounded-full border-8 border-forest shadow-[var(--shadow-soft)]"
-            >
+            <div className="overflow-hidden aspect-square w-full rounded-full border-8 border-forest shadow-[var(--shadow-soft)]">
               <img
                 src={clayForm}
                 alt="A soft clay sculpture in warm light"
                 width={816}
                 height={816}
                 loading="lazy"
-                className="h-full w-full object-cover scale-115 will-change-transform"
-                style={{ transform: `translateY(${offset}px)`, transition: "transform 0.1s ease-out" }}
+                className="h-full w-full object-cover"
               />
             </div>
           </div>
