@@ -7,12 +7,13 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { QuickExit } from "../components/common/QuickExit";
 import { DemoNav } from "../components/common/DemoNav";
+import { SplineLoadingScreen } from "../components/common/SplineLoadingScreen";
 
 function NotFoundComponent() {
   return (
@@ -136,6 +137,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <SplineLoadingScreen />
       <QuickExit />
       <Outlet />
       <DemoNav />

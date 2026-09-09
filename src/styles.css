@@ -128,6 +128,18 @@
   text-wrap: balance;
 }
 
+.vine-decoration {
+  left: min(0px, calc((80rem - 100vw) / 2));
+  width: 68vw;
+}
+
+@media (max-width: 767px) {
+  .vine-decoration {
+    left: 0;
+    width: 110vw;
+  }
+}
+
 /* Printed paper grain over the whole page */
 @utility grain {
   position: relative;
@@ -184,6 +196,11 @@
   100% { transform: scaleY(1); opacity: 1; }
 }
 
+@keyframes stoneRise {
+  from { opacity: 0; transform: translateY(18px) scale(0.94); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 @layer components {
   .animate-breathe {
     animation: breathe 3.6s ease-in-out infinite;
@@ -201,10 +218,14 @@
     transform-origin: bottom;
     animation: stemRise 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
+  .animate-stone-rise {
+    opacity: 0;
+    animation: stoneRise 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
-  .animate-breathe, .animate-drift, .animate-orb, .animate-stamp, .animate-stem { animation: none; }
+  .animate-breathe, .animate-drift, .animate-orb, .animate-stamp, .animate-stem, .animate-stone-rise { animation: none; opacity: 1; }
 }

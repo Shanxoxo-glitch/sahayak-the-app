@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Reveal } from "@/components/landing/Reveal";
 import heroHands from "@/assets/hero-hands.jpg";
@@ -5,6 +6,8 @@ import clayForm from "@/assets/clay-form.jpg";
 import listening from "@/assets/listening.jpg";
 import dawnField from "@/assets/dawn-field.jpg";
 import { Sparkles, HeartHandshake, ShieldCheck, ArrowRight, MessageCircle } from "lucide-react";
+import { BottomNavbar } from "@/components/common/BottomNavbar";
+import { AuthModal } from "@/components/auth/AuthModal";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -86,55 +89,9 @@ function CrisisPill() {
   );
 }
 
-function NavBar() {
-  return (
-    <header className="mx-auto flex max-w-7xl items-center justify-between px-6 pt-16 md:px-10">
-      <Link to="/" className="group flex items-center gap-2">
-        <span className="font-display text-3xl tracking-tight text-foreground transition-colors group-hover:text-clay">
-          Sahayak
-        </span>
-        <span className="h-1.5 w-1.5 rounded-full bg-clay animate-breathe" />
-      </Link>
-
-      <nav className="flex items-center gap-5 text-sm">
-        <Link
-          to="/checkin"
-          className="text-foreground/75 transition-colors hover:text-clay font-medium"
-        >
-          Check-in
-        </Link>
-        <Link
-          to="/chat"
-          className="text-foreground/75 transition-colors hover:text-clay font-medium"
-        >
-          Sanctuary Chat
-        </Link>
-        <Link
-          to="/history"
-          className="hidden md:inline-block text-foreground/75 transition-colors hover:text-clay"
-        >
-          Garden
-        </Link>
-        <Link
-          to="/request"
-          className="hidden sm:inline-block text-foreground/75 transition-colors hover:text-clay"
-        >
-          Get Help
-        </Link>
-        <Link
-          to="/portal"
-          className="rounded-full bg-forest/10 px-3.5 py-1.5 text-xs font-medium text-forest hover:bg-forest hover:text-forest-foreground transition-all"
-        >
-          Role Portal
-        </Link>
-      </nav>
-    </header>
-  );
-}
-
 function Hero() {
   return (
-    <section className="mx-auto grid max-w-7xl items-center gap-14 px-6 pb-20 pt-16 md:px-10 lg:grid-cols-2 lg:gap-20 lg:pt-24">
+    <section className="mx-auto grid max-w-7xl items-center gap-14 px-6 pb-20 pt-0 md:px-10 lg:grid-cols-2 lg:gap-20 lg:pt-[0.1rem]">
       <div className="order-2 flex flex-col gap-8 lg:order-1">
         <Reveal>
           <div className="inline-flex items-center gap-2 rounded-full border border-clay/30 bg-clay/10 px-3.5 py-1 text-xs font-medium uppercase tracking-[0.24em] text-clay">
@@ -202,17 +159,30 @@ function Hero() {
 
 function Journey() {
   return (
-    <section id="journey" className="mx-auto max-w-7xl px-6 py-16 md:px-10">
-      <div className="grid gap-12 border-t border-foreground/10 pt-16 md:grid-cols-3">
+    <section id="journey" className="mx-auto max-w-7xl px-6 py-16 md:px-10 relative">
+      {/* Leaf-vine PNG decorating the left side above the three cards — covers over half screen */}
+      <div className="vine-decoration absolute -top-72 pointer-events-none select-none opacity-90 z-0" aria-hidden="true">
+        <img
+          src="/leaf-vine-isolate-on-transparent-background-file-png.webp"
+          alt=""
+          className="w-full h-auto object-contain"
+        />
+      </div>
+
+      <div className="relative z-10 grid gap-12 border-t border-foreground/10 pt-16 md:grid-cols-3">
         {journey.map((step, i) => (
           <Reveal key={step.n} delay={i * 140}>
-            <div className="flex flex-col gap-4 rounded-3xl p-6 bg-card/40 border border-foreground/5 hover:border-clay/30 transition-all">
-              <span className={`font-display text-5xl ${step.tone}`}>{step.n}</span>
-              <h3 className="text-2xl font-display">{step.title}</h3>
-              <p className="leading-relaxed text-foreground/70 text-sm flex-1">{step.body}</p>
+            <div className={`group flex flex-col gap-4 rounded-3xl p-6 cursor-pointer ${
+              step.n === "02" ? "border border-clay/35" : "border border-foreground/5"
+            } ${
+              step.n === "01" || step.n === "03" ? "bg-clay" : "bg-white"
+            }`}>
+              <span className={`font-display text-5xl ${step.n === "01" || step.n === "03" ? "text-white" : step.tone}`}>{step.n}</span>
+              <h3 className={`text-2xl font-display ${step.n === "01" || step.n === "03" ? "text-white" : "text-foreground"}`}>{step.title}</h3>
+              <p className={`leading-relaxed text-sm flex-1 ${step.n === "01" || step.n === "03" ? "text-white" : "text-foreground/70"}`}>{step.body}</p>
               <Link
                 to={step.link}
-                className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.16em] text-clay hover:text-forest transition-colors"
+                className={`mt-2 inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.16em] ${step.n === "01" || step.n === "03" ? "text-white" : "text-clay"}`}
               >
                 <span>{step.action}</span>
                 <ArrowRight className="h-3 w-3" />
@@ -243,7 +213,7 @@ function HowItHelps() {
         </Reveal>
         <Reveal delay={140}>
           <div className="flex flex-col gap-8">
-            <h2 className="text-4xl italic md:text-5xl font-display">Held, not handled.</h2>
+            <h2 className="text-4xl italic md:text-5xl font-display"><em className="text-clay">Held,</em> not handled.</h2>
             <div className="flex flex-col divide-y divide-foreground/10">
               {[
                 {
@@ -369,8 +339,8 @@ function Closing() {
 
 function Footer() {
   return (
-    <footer className="bg-forest text-forest-foreground">
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 py-16 md:grid-cols-4 md:px-10">
+    <footer className="relative overflow-hidden bg-forest text-forest-foreground">
+      <div className="relative z-10 mx-auto grid max-w-7xl gap-10 px-6 py-16 md:grid-cols-[repeat(4,minmax(0,1fr))] md:pr-[28%] md:px-10">
         <div className="md:col-span-1">
           <p className="font-display text-3xl">Sahayak</p>
           <p className="mt-3 text-xs leading-relaxed text-forest-foreground/65">
@@ -408,21 +378,34 @@ function Footer() {
           <p><Link to="/help" className="hover:underline">All Helplines Directory</Link></p>
         </div>
       </div>
+      <div className="pointer-events-none absolute inset-x-4 top-0 bottom-4 hidden md:block" aria-hidden="true">
+        <img
+          src="/pngtree-3d-decorative-pillar-around-flower-design-png-image_11379314.png"
+          alt=""
+          className="ml-auto h-full w-[28%] translate-x-16 object-contain object-bottom"
+        />
+      </div>
     </footer>
   );
 }
 
 function Landing() {
+  const [authOpen, setAuthOpen] = useState(false);
+
   return (
     <main className="grain min-h-screen bg-background">
       <CrisisPill />
-      <NavBar />
       <Hero />
       <Journey />
       <HowItHelps />
       <Privacy />
       <Closing />
       <Footer />
+
+      <BottomNavbar onOpenAuth={() => setAuthOpen(true)} />
+
+      {/* Auth Modal — login / signup with role selection and Spline gradient */}
+      <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
     </main>
   );
 }
