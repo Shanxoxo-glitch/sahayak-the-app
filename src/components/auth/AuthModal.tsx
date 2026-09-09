@@ -52,8 +52,6 @@ export function AuthModal({ isOpen, onClose, defaultRole = "victim" }: AuthModal
 
   // Load Spline runtime on left side canvas
   useEffect(() => {
-    if (!isOpen) return;
-
     let splineApp: Application | null = null;
     const canvas = canvasRef.current;
 
@@ -82,7 +80,7 @@ export function AuthModal({ isOpen, onClose, defaultRole = "victim" }: AuthModal
         }
       }
     };
-  }, [isOpen]);
+  }, []);
 
   // Generate a victim referral ID if signing up as victim
   useEffect(() => {
@@ -102,8 +100,6 @@ export function AuthModal({ isOpen, onClose, defaultRole = "victim" }: AuthModal
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
 
   const handleCopyRef = () => {
     navigator.clipboard.writeText(generatedVictimRef);
@@ -146,7 +142,12 @@ export function AuthModal({ isOpen, onClose, defaultRole = "victim" }: AuthModal
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-foreground/30 backdrop-blur-md animate-in fade-in duration-300">
+    <div
+      aria-hidden={!isOpen}
+      className={`fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-foreground/30 backdrop-blur-md transition-opacity duration-300 ${
+        isOpen ? "opacity-100" : "pointer-events-none opacity-0"
+      }`}
+    >
       <div
         className="relative w-full max-w-4xl h-[620px] max-h-[92vh] rounded-[2.5rem] border border-foreground/15 bg-background shadow-[0_30px_90px_-20px_rgba(0,0,0,0.35)] overflow-hidden flex flex-col md:flex-row"
         onClick={(e) => e.stopPropagation()}

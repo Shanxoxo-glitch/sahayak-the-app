@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Application } from "@splinetool/runtime";
 
 export function SplineLoadingScreen() {
   const archetypes = [
@@ -11,6 +12,7 @@ export function SplineLoadingScreen() {
   const [progress, setProgress] = useState(0);
   const [ready, setReady] = useState(false);
   const [archetypeIndex, setArchetypeIndex] = useState(0);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const archetypeTimer = window.setInterval(() => {
@@ -23,6 +25,8 @@ export function SplineLoadingScreen() {
   useEffect(() => {
     let cancelled = false;
     let progressTimer: number | undefined;
+    let readyTimer: number | undefined;
+    let splineApp: Application | null = null;
 
     const preloadSpline = async () => {
       progressTimer = window.setInterval(() => {
@@ -30,16 +34,18 @@ export function SplineLoadingScreen() {
       }, 100);
 
       try {
-        const response = await fetch("/gradient.splinecode");
-        if (!response.ok) throw new Error(`Spline preload failed: ${response.status}`);
-        await response.arrayBuffer();
+        const canvas = canvasRef.current;
+        if (!canvas) throw new Error("Spline preload canvas is unavailable");
+
+        splineApp = new Application(canvas);
+        await splineApp.load("/gradient.splinecode");
       } catch (error) {
-        console.warn("Spline preload failed; continuing with the visual fallback:", error);
+        console.warn("Spline runtime preload failed; continuing with the visual fallback:", error);
       } finally {
         if (progressTimer) window.clearInterval(progressTimer);
         if (!cancelled) {
           setProgress(100);
-          window.setTimeout(() => setReady(true), 350);
+          readyTimer = window.setTimeout(() => setReady(true), 350);
         }
       }
     };
@@ -48,6 +54,8 @@ export function SplineLoadingScreen() {
     return () => {
       cancelled = true;
       if (progressTimer) window.clearInterval(progressTimer);
+      if (readyTimer) window.clearTimeout(readyTimer);
+      if (splineApp) splineApp.dispose();
     };
   }, []);
 
@@ -55,6 +63,7 @@ export function SplineLoadingScreen() {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-[#e8dfcf] text-forest">
+      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full opacity-0 pointer-events-none" aria-hidden="true" />
       <div className="absolute inset-0 opacity-20 [background-image:radial-gradient(#45604e_0.7px,transparent_0.7px)] [background-size:18px_18px]" />
       <div className="relative flex w-full max-w-md flex-col items-center px-8 text-center">
         <div className="mb-10 flex h-32 w-52 flex-col items-center justify-end gap-2" aria-hidden="true">
