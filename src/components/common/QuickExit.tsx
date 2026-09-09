@@ -1,13 +1,25 @@
 import { useEffect, useCallback } from "react";
+import { useLocation } from "@tanstack/react-router";
 import { executeQuickExit } from "@/lib/store";
 import { ShieldAlert } from "lucide-react";
 
 export function QuickExit() {
+  const location = useLocation();
+  const path = location.pathname;
+
+  // Quick exit is strictly for victim views only — never on counsellor, admin, or portal screens
+  const isVictimScreen =
+    !path.startsWith("/counsellor") &&
+    !path.startsWith("/admin") &&
+    !path.startsWith("/portal");
+
   const exit = useCallback(() => {
     executeQuickExit();
   }, []);
 
   useEffect(() => {
+    if (!isVictimScreen) return;
+
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         exit();
@@ -15,7 +27,11 @@ export function QuickExit() {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [exit]);
+  }, [exit, isVictimScreen]);
+
+  if (!isVictimScreen) {
+    return null;
+  }
 
   return (
     <button
